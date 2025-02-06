@@ -6,7 +6,7 @@ Um projeto básico de autenticação e controle de permissões usando Vue 3, Vue
 - Vue 3  
 - Vue Router  
 - Pinia (Gerenciamento de estado)  
-- Axios (Requisições HTTP, interceptors)  
+- Axios (Requisições HTTP, Interceptors)  
 - Vue Toastification (Notificações)  
 
 ## 📂 Estrutura do projeto
@@ -31,18 +31,20 @@ Um projeto básico de autenticação e controle de permissões usando Vue 3, Vue
 
 ## 🛠️ Instalação e Uso
 
-1. Clone este repositório, instale as dependências, e suba os server's, tanto o do vuew quanto a do php para a api
+1. Clone este repositório, instale as dependências, e suba os server's, tanto o do vue quanto do php para a api
 
    ```sh
    git clone https://github.com/LucianoCharlesdeSouza/vue-auth-permissions-basic.git
    
-   cd vue-auth-permissions-basic
-
-   php -S localhost:8000 api.php
-   
+   cd vue-auth-permissions-basic  
    npm install
    npm run serve
    ```
+2. Na raiz do projeto, suba o server embed do php(ou da maneira que voce ja tem disposto em seu ambiente
+
+```sh
+   php -S localhost:8000 api.php
+```
    
 ## 🔐 Autenticação e Permissões
 
