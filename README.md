@@ -19,21 +19,27 @@ Um projeto básico de autenticação e controle de permissões usando Vue 3, Vue
 ```plaintext
 📦 src
  ┣ 📂 components      # Componentes reutilizáveis
- ┣ 📂 views           # Páginas da aplicação
- ┣ 📂 router          # Configuração do Vue Router e middlewares
- ┣ 📂 stores          # Estado global (Pinia)
+ ┣ 📂 composables     # Objetos reutilizáveis
+ ┣ 📂 middlewares     # Middlewares
+ ┣ 📂 router          # Configuração do Vue Router
  ┣ 📂 services        # API e chamadas HTTP
+ ┣ 📂 stores          # Estado global (Pinia)
+ ┣ 📂 views           # Páginas da aplicação
  ┣ 📜 main.js         # Arquivo principal da aplicação
  ┗ 📜 App.vue         # Componente raiz
 ```
 
 ## 🛠️ Instalação e Uso
 
-1. Clone este repositório, instale as dependências, e suba o server
+1. Clone este repositório, instale as dependências, e suba os server's, tanto o do vuew quanto a do php para a api
 
    ```sh
    git clone https://github.com/LucianoCharlesdeSouza/vue-auth-permissions-basic.git
+   
    cd vue-auth-permissions-basic
+
+   php -S localhost:8000 api.php
+   
    npm install
    npm run serve
    ```
