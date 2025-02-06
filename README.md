@@ -45,6 +45,14 @@ Um projeto básico de autenticação e controle de permissões usando Vue 3, Vue
 ```sh
    php -S localhost:8000 api.php
 ```
+3. Acesse o seguinte endereço pelo seu navegador
+```sh
+hppt://localhost:8080/login
+```
+4. Usuarios de teste(cada um possui permissoes diferente
+- souzacomprog@gmail.com com senha 1234
+- robson@gmail.com com senha 1234
+
    
 ## 🔐 Autenticação e Permissões
 
