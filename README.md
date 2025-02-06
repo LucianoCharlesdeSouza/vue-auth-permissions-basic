@@ -11,14 +11,7 @@ Um projeto básico de autenticação e controle de permissões usando Vue 3, Vue
 
 ## 📂 Estrutura do projeto
 
-📦 src 
-┣ 📂 components # Componentes reutilizáveis 
-┣ 📂 views # Páginas da aplicação 
-┣ 📂 router # Configuração do Vue Router e middlewares 
-┣ 📂 stores # Estado global (Pinia) 
-┣ 📂 services # API e chamadas HTTP 
-┣ 📜 main.js # Arquivo principal da aplicação 
-┗ 📜 App.vue # Componente raiz
+📦 src ┣ 📂 components # Componentes reutilizáveis ┣ 📂 views # Páginas da aplicação ┣ 📂 router # Configuração do Vue Router e middlewares ┣ 📂 stores # Estado global (Pinia) ┣ 📂 services # API e chamadas HTTP ┣ 📜 main.js # Arquivo principal da aplicação ┗ 📜 App.vue # Componente raiz
 
 
 ## 🛠️ Instalação e Uso
