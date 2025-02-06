@@ -12,7 +12,7 @@ Um projeto básico de autenticação e controle de permissões usando Vue 3, Vue
 ## 📂 Estrutura do projeto
 
 ```plaintext
-📦 src
+📦 raiz/vue-auth-permissions-basic
  ┣ 📂 components      # Componentes reutilizáveis
  ┣ 📂 views           # Páginas da aplicação
  ┣ 📂 router          # Configuração do Vue Router e middlewares
@@ -20,6 +20,11 @@ Um projeto básico de autenticação e controle de permissões usando Vue 3, Vue
  ┣ 📂 services        # API e chamadas HTTP
  ┣ 📜 main.js         # Arquivo principal da aplicação
  ┗ 📜 App.vue         # Componente raiz
+```
+
+```plaintext
+📦 src
+ ┣ api.php
 ```
 ## 🛠️ Instalação e Uso
 
