@@ -28,13 +28,10 @@ Um projeto básico de autenticação e controle de permissões usando Vue 3, Vue
    ```sh
    git clone https://github.com/LucianoCharlesdeSouza/vue-auth-permissions-basic.git
    cd vue-auth-permissions-basic
-   ```
-
-   cd vue-auth-permissions-basic
    npm install
    npm run serve
-
-
+   ```
+   
 ## 🔐 Autenticação e Permissões
 
 - Autenticação: O usuário faz login e recebe um token, armazenado em sessionStorage.
