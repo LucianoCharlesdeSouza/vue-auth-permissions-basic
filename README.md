@@ -40,19 +40,19 @@ Um projeto básico de autenticação e controle de permissões usando Vue 3, Vue
    npm install
    npm run serve
    ```
-2. Na raiz do projeto, suba o server embed do php(ou da maneira que voce ja tem disposto em seu ambiente
+2. Na raiz do projeto, inicie o server embed do php (ou da maneira que voce ja tem disposto em seu ambiente)
 
 ```sh
    php -S localhost:8000 api.php
 ```
 3. Acesse o seguinte endereço pelo seu navegador
+
 ```sh
 http://localhost:8080/login
 ```
 4. Usuarios de teste (cada um possui permissoes diferentes)
 - souzacomprog@gmail.com com senha 1234
 - robson@gmail.com com senha 1234
-
    
 ## 🔐 Autenticação e Permissões
 
