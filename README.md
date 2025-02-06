@@ -23,10 +23,18 @@ Um projeto básico de autenticação e controle de permissões usando Vue 3, Vue
 ```
 ## 🛠️ Instalação e Uso
 
-1. Clone este repositório:
+1. Clone este repositório, instale as dependências, e suba o server
 
    ```sh
    git clone https://github.com/seu-usuario/vue-auth-permissions-basic.git
-   cd vue-auth-permissions-basic```
+   cd vue-auth-permissions-basic
    
    npm install
+   npm run serve
+```
+
+## 🔐 Autenticação e Permissões
+
+Autenticação: O usuário faz login e recebe um token, armazenado em sessionStorage.
+Permissões: O sistema verifica se o usuário tem permissão antes de acessar certas rotas.
+Proteção de rotas: Middleware authGuard no beforeEach do Vue Router impede acessos indevidos.
