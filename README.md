@@ -20,13 +20,13 @@ Um projeto básico de autenticação e controle de permissões usando Vue 3, Vue
  ┣ 📂 services        # API e chamadas HTTP
  ┣ 📜 main.js         # Arquivo principal da aplicação
  ┗ 📜 App.vue         # Componente raiz
-
+```
 ## 🛠️ Instalação e Uso
 
 1. Clone este repositório:
 
    ```sh
    git clone https://github.com/seu-usuario/vue-auth-permissions-basic.git
-   cd vue-auth-permissions-basic
-
+   cd vue-auth-permissions-basic```
+   
    npm install
