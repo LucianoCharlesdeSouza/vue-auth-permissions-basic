@@ -12,7 +12,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const authStore = useAuthStore();
-    const { token } = storeToRefs(authStore); // Obtém a referência reativa do token
+    const { token } = storeToRefs(authStore); 
 
     if (token.value) {
       config.headers.Authorization = `Bearer ${token.value}`;
