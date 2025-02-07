@@ -1,6 +1,7 @@
 <template>
     <div class="home">
         <MenuComponent />
+        <h1>Dashboard</h1>
     </div>
 </template>
 

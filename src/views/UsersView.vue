@@ -1,9 +1,10 @@
 <template>
     <div class="home">
-        <UsersComponent />
+        <MenuComponent />
+        <h1>Pagina de Usuarios</h1>
     </div>
 </template>
 
 <script setup>
-import UsersComponent from '@/components/UsersComponent.vue';
+import MenuComponent from '@/components/MenuComponent.vue';
 </script>

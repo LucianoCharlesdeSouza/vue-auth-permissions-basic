@@ -16,8 +16,8 @@ $secretKey = 'secret';
 // Simular um banco de dados de usuários
 $users = [
     'souzacomprog@gmail.com' => [
-        'password'           => 'admin',
-        'permissions'        => ['dashboard', 'users', 'settings']
+        'password'           => '1234',
+        'permissions'        => ['dashboard', 'users']
     ],
     'robson@gmail.com' => [
         'password'     => '1234',
@@ -71,7 +71,7 @@ if ($method === 'POST' && $uri === '/api.php/login') {
     $data = json_decode(file_get_contents('php://input'), true);
 
     if (empty($data['email']) || empty($data['password'])) {
-        http_response_code(400);
+        http_response_code(422);
         echo json_encode(['error' => 'Email e senha são obrigatórios']);
         exit;
     }
@@ -80,7 +80,7 @@ if ($method === 'POST' && $uri === '/api.php/login') {
     $password = $data['password'];
 
     if (!isset($users[$email]) || $users[$email]['password'] !== $password) {
-        http_response_code(401);
+        http_response_code(422);
         echo json_encode(['error' => 'Credenciais inválidas']);
         exit;
     }

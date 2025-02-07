@@ -20,7 +20,6 @@ export const useAuthStore = defineStore('auth', {
 
         const { data } = await api.post('/login', credentials);
         this.setSession(data);
-
     },
 
     logout() {
@@ -28,7 +27,8 @@ export const useAuthStore = defineStore('auth', {
     },
 
     loadSession() {
-      let token       = sessionStorage.getItem('token');
+
+      let token         = sessionStorage.getItem('token');
       const user        = sessionStorage.getItem('user');
       const permissions = sessionStorage.getItem('permissions');
 

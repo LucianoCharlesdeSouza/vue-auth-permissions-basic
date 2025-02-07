@@ -1,18 +1,19 @@
 import axios from "axios";
 import { useAuthStore } from "@/stores/authStore";
 import { storeToRefs } from "pinia";
-import router from "@/router";
+import { useToast } from 'vue-toastification';  
 
 const api = axios.create({
-  baseURL: "http://localhost:8000/api.php",
+  baseURL: process.env.VUE_APP_API_URL,
   headers: { Accept: "application/json" }
 });
 
-// Interceptor para adicionar token
+const toast = useToast();
+
 api.interceptors.request.use(
   (config) => {
     const authStore = useAuthStore();
-    const { token } = storeToRefs(authStore); 
+    const { token } = storeToRefs(authStore);
 
     if (token.value) {
       config.headers.Authorization = `Bearer ${token.value}`;
@@ -23,23 +24,32 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Interceptor para tratar erros
+
+const handleValidationErrors = (errors) => {
+    // Converte o objeto de erros do Laravel em um array de mensagens
+    const messages = Object.values(errors).flat();
+    
+    messages.forEach(message => {
+        toast.warning(`${message}`, { timeout: 3000 });
+    });
+};
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    const authStore = useAuthStore();
 
     if (error.response) {
+      const status = error.response.status;
       const errorMessage = error.response.data?.error || "Erro desconhecido";
 
-      if (error.response.status === 401) {
-        authStore.logout();
-        router.push("/login");
+      if (status === 422) {
+        handleValidationErrors(error.response.data);
       }
 
       return Promise.reject(new Error(errorMessage));
     }
 
+    toast.error("🚨 Erro na conexão com o servidor", { timeout: 3000 });
     return Promise.reject(new Error("Erro na conexão com o servidor"));
   }
 );
