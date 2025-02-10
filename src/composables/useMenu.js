@@ -7,10 +7,12 @@ export function useMenu() {
 
   const canAccess = (permission) => authStore.hasPermission(permission);
 
+  const user = authStore.user;
+
   const logout = () => {
     authStore.logout();
     router.push('/login');
   };
 
-  return { canAccess, logout };
+  return { canAccess, logout, user };
 }

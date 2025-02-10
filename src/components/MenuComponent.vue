@@ -1,24 +1,37 @@
 <template>
-  <nav class="menu">
-    <ul class="menu-list">
-      <li v-if="canAccess('dashboard')">
-        <router-link to="/dashboard">Dashboard</router-link>
-      </li>
-      <li v-if="canAccess('users')">
-        <router-link to="/users">Usuarios</router-link>
-      </li>
-    </ul>
-    <button @click="logout" class="logout-btn">Sair</button>
-  </nav>
+  <div>
+    <header>
+      <h3>{{ user }}</h3>
+      <button @click="logout" class="logout-btn">Sair</button>
+    </header>
+    <nav class="menu">
+      <ul class="menu-list">
+        <li v-if="canAccess('dashboard')">
+          <router-link to="/dashboard">Dashboard</router-link>
+        </li>
+        <li v-if="canAccess('users')">
+          <router-link to="/users">Usuarios</router-link>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
 </template>
 
 <script setup>
 import { useMenu } from '@/composables/useMenu';
 
-const { canAccess, logout } = useMenu();
+const { canAccess, logout, user } = useMenu();
 </script>
 
 <style scoped>
+header{
+  display: flex;
+  height: 40px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
 .menu {
   display: flex;
   justify-content: space-between;
@@ -54,6 +67,8 @@ const { canAccess, logout } = useMenu();
 }
 
 .logout-btn {
+  width: 80px;
+  height: 40px;
   background-color: #dc3545;
   color: #fff;
   border: none;
