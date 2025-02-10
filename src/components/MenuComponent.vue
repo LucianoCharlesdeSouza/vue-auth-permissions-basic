@@ -8,14 +8,14 @@
         <router-link to="/users">Usuarios</router-link>
       </li>
     </ul>
-    <button @click="logout" class="logout-btn">Sair</button>
+    <button v-if="isAuth" @click="logout" class="logout-btn">Sair</button>
   </nav>
 </template>
 
 <script setup>
 import { useMenu } from '@/composables/useMenu';
 
-const { canAccess, logout } = useMenu();
+const { canAccess, logout, isAuth } = useMenu();
 </script>
 
 <style scoped>

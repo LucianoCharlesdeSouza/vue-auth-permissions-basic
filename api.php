@@ -95,6 +95,18 @@ if ($method === 'POST' && $uri === '/api.php/login') {
     exit;
 }
 
+if ($method === 'POST' && $uri === '/api.php/me') {
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    echo json_encode([
+        // 'token'       => $token,
+        // 'user'        => $email,
+        // 'permissions' => $users[$email]['permissions'],
+        'data'        => $data
+    ]);
+    exit;
+}
+
 http_response_code(404);
 echo json_encode(['error' => 'Rota não encontrada']);
 exit;
