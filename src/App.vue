@@ -1,11 +1,4 @@
-<script setup>
-import MenuComponent from '@/components/MenuComponent.vue'
-</script>
-
 <template>
-  <div>
-    <MenuComponent/>
-  </div>
   <router-view/>
 </template>
 
@@ -16,18 +9,5 @@ import MenuComponent from '@/components/MenuComponent.vue'
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
 }
 </style>

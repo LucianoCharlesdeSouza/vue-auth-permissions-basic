@@ -1,6 +1,8 @@
 <template>
   <div class="login-container">
+
     <h2>Login</h2>
+    
     <form @submit.prevent="handleLogin" class="login-form">
       <input type="email" v-model="email" placeholder="Email" />
       <input type="password" v-model="password" placeholder="Senha" />

@@ -12,6 +12,7 @@ const toast = useToast();
 
 api.interceptors.request.use(
   (config) => {
+
     const authStore = useAuthStore();
     const { token } = storeToRefs(authStore);
 
@@ -26,7 +27,7 @@ api.interceptors.request.use(
 
 
 const handleValidationErrors = (errors) => {
-    // Converte o objeto de erros do Laravel em um array de mensagens
+
     const messages = Object.values(errors).flat();
     
     messages.forEach(message => {
@@ -36,6 +37,7 @@ const handleValidationErrors = (errors) => {
 
 api.interceptors.response.use(
   (response) => response,
+  
   (error) => {
 
     if (error.response) {

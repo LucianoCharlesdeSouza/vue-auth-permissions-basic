@@ -20,6 +20,7 @@ Um projeto básico de autenticação e controle de permissões usando Vue 3, Vue
 📦 src
  ┣ 📂 components      # Componentes reutilizáveis
  ┣ 📂 composables     # Objetos reutilizáveis
+ ┣ 📂 layouts         # Layout para usuários autenticados
  ┣ 📂 middlewares     # Middlewares
  ┣ 📂 router          # Configuração do Vue Router
  ┣ 📂 services        # API e chamadas HTTP
