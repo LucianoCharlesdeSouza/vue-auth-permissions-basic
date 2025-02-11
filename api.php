@@ -112,8 +112,8 @@ if ($method === 'POST' && $uri === '/api.php/login') {
     // Gerar access token 
     $accessToken = generateJWT($email, $users[$email]['permissions'], $secretKey, 30);
 
-    // Gerar refresh token (expira em 7 dias)
-    $refreshToken = generateJWT($email, $users[$email]['permissions'], $refreshSecretKey, 604800);
+
+    $refreshToken = generateJWT($email, $users[$email]['permissions'], $refreshSecretKey, 60);
 
     echo json_encode([
         'token'        => $accessToken,

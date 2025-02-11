@@ -2,7 +2,7 @@ import axios from "axios";
 import { useAuthStore } from "@/stores/authStore";
 import { storeToRefs } from "pinia";
 import { useToast } from 'vue-toastification';
-import router from '@/router'; // Certifique-se de importar o router
+import router from '@/router';
 
 const api = axios.create({
   baseURL: process.env.VUE_APP_API_URL,
@@ -47,13 +47,19 @@ const handleValidationErrors = (errors) => {
     });
 };
 
+const handleLogout = (authStore) => {
+    authStore.logout();
+    router.push('/login');
+};
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
     const authStore = useAuthStore();
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Verifica se é erro 401 e não é uma requisição de refresh
+    if (error.response?.status === 401 && !originalRequest._retry && originalRequest.url !== '/refresh') {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
@@ -62,7 +68,13 @@ api.interceptors.response.use(
             originalRequest.headers['Authorization'] = 'Bearer ' + token;
             return api(originalRequest);
           })
-          .catch(err => Promise.reject(err));
+          .catch(err => {
+            // Se o erro for 401 novamente, força logout
+            if (err.response?.status === 401) {
+              handleLogout(authStore);
+            }
+            return Promise.reject(err);
+          });
       }
 
       originalRequest._retry = true;
@@ -80,12 +92,24 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError, null);
-        authStore.logout();
-        router.push('/login');
+        // Se o refresh token estiver expirado ou inválido
+        if (refreshError.response?.status === 401) {
+          toast.error("Sessão expirada. Por favor, faça login novamente.", { timeout: 3000 });
+
+          handleLogout(authStore);
+
+        } else {
+          toast.error("Erro ao renovar a sessão", { timeout: 3000 });
+        }
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
       }
+    }
+
+    if (error.response?.status === 401 && originalRequest.url === '/refresh') {
+      handleLogout(authStore);
+      return Promise.reject(error);
     }
 
     if (error.response?.status === 422) {

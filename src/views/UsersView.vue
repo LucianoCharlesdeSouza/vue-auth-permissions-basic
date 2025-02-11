@@ -5,10 +5,10 @@
         </div>
 
         <div v-else>
-            <h1>Página de Usuarios</h1>
+            <h1>Pagina de Usuarios</h1>
 
             <div class="user-info">
-                <h2>Informaçoes do Usuário</h2>
+                <h2>Informaçoes do Usuario</h2>
                 <p><strong>Email:</strong> {{ authStore.user }}</p>
                 <p><strong>Permissoes:</strong> {{ authStore.permissions.join(', ') }}</p>
                 <p><strong>Status do Token:</strong> {{ tokenStatus }}</p>
