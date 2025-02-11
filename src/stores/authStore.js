@@ -1,12 +1,11 @@
 import { defineStore } from 'pinia';
 import api from '@/services/api';
 
-export const useAuthStore = defineStore(
-  'auth',
-{
+export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
     token: null,
+    refreshToken: null,
     permissions: []
   }),
 
@@ -19,19 +18,27 @@ export const useAuthStore = defineStore(
 
   actions: {
     async login(credentials) {
-
       const { data } = await api.post('/login', credentials);
 
-      this.token = data.token
-      this.user = data.user
-      this.permissions = data.permissions
+      this.token = data.token;
+      this.refreshToken = data.refreshToken;
+      this.user = data.user;
+      this.permissions = data.permissions;
+    },
+    
+    setToken(newToken) {
+      this.token = newToken;
     },
     
     logout() {
       this.user = null;
       this.token = null;
+      this.refreshToken = null;
       this.permissions = [];
     },
   },
-    persist: true 
+  
+  persist: {
+    paths: ['user', 'token', 'refreshToken', 'permissions']
+  }
 });

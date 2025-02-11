@@ -97,8 +97,5 @@ header{
     margin: 10px 0;
   }
 
-  .logout-btn {
-    width: 100%;
-  }
 }
 </style>
