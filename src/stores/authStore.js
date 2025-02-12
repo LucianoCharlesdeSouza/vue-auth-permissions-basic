@@ -1,16 +1,16 @@
 import { defineStore } from 'pinia';
 import api from '@/services/api';
+import router from '@/router';
+
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: null,
-    token: null,
-    refreshToken: null,
     permissions: []
   }),
 
   getters: {
-    isAuthenticated: state => Boolean(state.token),
+    isAuthenticated: state => Boolean(state.user),
     hasPermission: (state) => (permission) => {
       return Array.isArray(state.permissions) && state.permissions.includes(permission);
     }
@@ -18,27 +18,23 @@ export const useAuthStore = defineStore('auth', {
 
   actions: {
     async login(credentials) {
+
       const { data } = await api.post('/login', credentials);
 
-      this.token = data.token;
-      this.refreshToken = data.refreshToken;
       this.user = data.user;
       this.permissions = data.permissions;
     },
-    
-    setToken(newToken) {
-      this.token = newToken;
-    },
-    
-    logout() {
+        
+    async logout() {
+      
+      await api.post('/logout');
       this.user = null;
-      this.token = null;
-      this.refreshToken = null;
       this.permissions = [];
-    },
+      router.push('/login');
+    }
   },
   
   persist: {
-    paths: ['user', 'token', 'refreshToken', 'permissions']
+    paths: ['user', 'permissions']
   }
 });

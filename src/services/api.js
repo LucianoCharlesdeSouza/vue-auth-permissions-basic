@@ -1,12 +1,12 @@
 import axios from "axios";
 import { useAuthStore } from "@/stores/authStore";
-import { storeToRefs } from "pinia";
 import { useToast } from 'vue-toastification';
 import router from '@/router';
 
 const api = axios.create({
   baseURL: process.env.VUE_APP_API_URL,
-  headers: { Accept: "application/json" }
+  headers: { Accept: "application/json" },
+  withCredentials: true  // Importante para enviar/receber cookies
 });
 
 const toast = useToast();
@@ -14,31 +14,18 @@ const toast = useToast();
 let isRefreshing = false;
 let failedQueue = [];
 
-const processQueue = (error, token = null) => {
+const processQueue = (error) => {
   failedQueue.forEach(prom => {
     if (error) {
       prom.reject(error);
     } else {
-      prom.resolve(token);
+      prom.resolve(); // Não precisamos mais passar um token
     }
   });
   
   failedQueue = [];
 };
 
-api.interceptors.request.use(
-  (config) => {
-    const authStore = useAuthStore();
-    const { token } = storeToRefs(authStore);
-
-    if (token.value) {
-      config.headers.Authorization = `Bearer ${token.value}`;
-    }
-
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
 
 const handleValidationErrors = (errors) => {
     const messages = Object.values(errors).flat();
@@ -64,10 +51,7 @@ api.interceptors.response.use(
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
         })
-          .then(token => {
-            originalRequest.headers['Authorization'] = 'Bearer ' + token;
-            return api(originalRequest);
-          })
+          .then( () => api(originalRequest))
           .catch(err => {
             // Se o erro for 401 novamente, força logout
             if (err.response?.status === 401) {
@@ -78,29 +62,23 @@ api.interceptors.response.use(
       }
 
       originalRequest._retry = true;
-      isRefreshing = true;
+      isRefreshing           = true;
 
       try {
-        const response = await api.post('/refresh', {
-          refreshToken: authStore.refreshToken
-        });
-        
-        const { token } = response.data;
-        authStore.setToken(token);
-        
-        processQueue(null, token);
+
+        await api.post('/refresh');        
+        processQueue(null);
         return api(originalRequest);
       } catch (refreshError) {
-        processQueue(refreshError, null);
+        processQueue(refreshError);
         // Se o refresh token estiver expirado ou inválido
         if (refreshError.response?.status === 401) {
           toast.error("Sessão expirada. Por favor, faça login novamente.", { timeout: 3000 });
-
           handleLogout(authStore);
-
         } else {
           toast.error("Erro ao renovar a sessão", { timeout: 3000 });
         }
+
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;

@@ -11,7 +11,7 @@
                 <h2>Informaçoes do Usuario</h2>
                 <p><strong>Email:</strong> {{ authStore.user }}</p>
                 <p><strong>Permissoes:</strong> {{ authStore.permissions.join(', ') }}</p>
-                <p><strong>Status do Token:</strong> {{ tokenStatus }}</p>
+                <p><strong>Status do Cookie:</strong> {{ cookieStatus }}</p>
             </div>
         </div>
     </div>
@@ -24,7 +24,7 @@ import api from '@/services/api'
 
 const authStore = useAuthStore()
 const loading = ref(true)
-const tokenStatus = ref('Nao verificado')
+const cookieStatus = ref('Nao verificado')
 
 const verifyAuthentication = async () => {
     
@@ -33,9 +33,9 @@ const verifyAuthentication = async () => {
 
         await api.get('/me')
 
-        tokenStatus.value = 'Token valido'
+        cookieStatus.value = 'Cookie valido'
     } catch (error) {
-        tokenStatus.value = 'Token invalido ou expirado'
+        cookieStatus.value = 'Cookie invalido ou expirado'
         
         // O interceptor já vai lidar com o refresh token se necessário
     } finally {

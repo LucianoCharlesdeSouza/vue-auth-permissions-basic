@@ -1,13 +1,18 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: http://localhost:8080"); // URL do seu frontend
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Credentials: true"); // Importante para cookies!
 header('Content-Type: application/json');
+header('Access-Control-Max-Age: 3600');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
+
+date_default_timezone_set('America/Sao_Paulo');
+
 
 $secretKey        = 'secret';
 $refreshSecretKey = 'refresh-secret';
@@ -63,24 +68,21 @@ function validateJWT($token, $secretKey)
     return $payload;
 }
 
-function tokenIsValid($secretKey)
+function cookieIsValid($secretKey)
 {
-    $headers = getallheaders();
-    $authHeader = $headers['Authorization'] ?? '';
+    $access_token = $_COOKIE['access_token'] ?? null;
 
-    if (empty($authHeader) || !preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
+    if (!$access_token) {
         http_response_code(401);
-        echo json_encode(['error' => 'Token não fornecido']);
+        echo json_encode(['error' => 'Cookie não encontrado']);
         exit;
     }
 
-    $token = $matches[1];
-
-    $payload = validateJWT($token, $secretKey);
+    $payload = validateJWT($access_token, $secretKey);
 
     if (!$payload) {
         http_response_code(401);
-        echo json_encode(['error' => 'Token inválido ou expirado']);
+        echo json_encode(['error' => 'Access Token inválido ou expirado']);
         exit;
     }
 
@@ -92,6 +94,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 // Rota de login
 if ($method === 'POST' && $uri === '/api.php/login') {
+
     $data = json_decode(file_get_contents('php://input'), true);
 
     if (empty($data['email']) || empty($data['password'])) {
@@ -109,32 +112,74 @@ if ($method === 'POST' && $uri === '/api.php/login') {
         exit;
     }
 
-    // Gerar access token 
-    $accessToken = generateJWT($email, $users[$email]['permissions'], $secretKey, 30);
-
-
+    // Gerar tokens
+    $accessToken  = generateJWT($email, $users[$email]['permissions'], $secretKey, 30);
     $refreshToken = generateJWT($email, $users[$email]['permissions'], $refreshSecretKey, 60);
 
+    // Configurar cookies HTTP-only
+    setcookie('access_token', $accessToken, [
+        'expires' => time() + 30,
+        'path' => '/',
+        'domain' => 'localhost',
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'Strict'
+    ]);
+
+    setcookie('refresh_token', $refreshToken, [
+        'expires' => time() + 60,
+        'path' => '/',
+        'domain' => 'localhost',
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'Strict'
+    ]);
+
     echo json_encode([
-        'token'        => $accessToken,
-        'refreshToken' => $refreshToken,
-        'user'         => $email,
-        'permissions'  => $users[$email]['permissions']
+        'user' => $email,
+        'permissions' => $users[$email]['permissions']
     ]);
     exit;
 }
 
+//rota de logout
+if ($method === 'POST' && $uri === '/api.php/logout') {
+    // Remover cookies
+    setcookie('access_token', '', [
+        'expires' => 1,
+        'path' => '/',
+        'domain' => 'localhost',
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'Strict'
+    ]);
+
+    setcookie('refresh_token', '', [
+        'expires' => 1,
+        'path' => '/',
+        'domain' => 'localhost',
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'Strict'
+    ]);
+
+    echo json_encode(['message' => 'Logout realizado com sucesso']);
+    exit;
+}
+
+
 // rota para refresh token
 if ($method === 'POST' && $uri === '/api.php/refresh') {
-    $data = json_decode(file_get_contents('php://input'), true);
 
-    if (empty($data['refreshToken'])) {
-        http_response_code(422);
-        echo json_encode(['error' => 'Refresh token é obrigatório']);
+    $refreshToken = $_COOKIE['refresh_token'] ?? null;
+
+    if (!$refreshToken) {
+        http_response_code(401);
+        echo json_encode(['error' => 'Cookie Refresh token não encontrado']);
         exit;
     }
 
-    $payload = validateJWT($data['refreshToken'], $refreshSecretKey);
+    $payload = validateJWT($refreshToken, $refreshSecretKey);
 
     if (!$payload) {
         http_response_code(401);
@@ -147,18 +192,29 @@ if ($method === 'POST' && $uri === '/api.php/refresh') {
     // Gerar novo access token
     $newAccessToken = generateJWT($email, $users[$email]['permissions'], $secretKey, 30);
 
+    // Configurar novo cookie
+    setcookie('access_token', $newAccessToken, [
+        'expires' => time() + 30,
+        'path' => '/',
+        'domain' => 'localhost',
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'Strict'
+    ]);
+
     echo json_encode([
-        'token'       => $newAccessToken,
-        'user'        => $email,
+        'user' => $email,
         'permissions' => $users[$email]['permissions']
     ]);
     exit;
 }
 
 
+
+
 if ($method === 'GET' && $uri === '/api.php/me') {
 
-    $payload = tokenIsValid($secretKey);
+    $payload = cookieIsValid($secretKey);
 
     echo json_encode([
         'user'         => $payload['email'],
